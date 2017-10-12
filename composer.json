@@ -1,0 +1,20 @@
+{
+    "name": "techart/api-client",
+    "description": "Client for api.techart.ru",
+    "version" : "1.0.3",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Techart",
+            "homepage": "http://web-techart.ru/"
+        }
+    ],
+    "autoload" : {
+        "psr-4": {
+            "Techart\\API\\": "src/"
+        }
+    },
+    "require": {
+        "PHP": ">=5.3"
+    }
+}
