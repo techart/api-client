@@ -8,4 +8,9 @@ class Persons
     {
         return API::getStruct("persons/by-email/{$email}/");
     }
+    
+    public function getAll()
+    {
+        return API::getStruct("persons.json");
+    }
 }
