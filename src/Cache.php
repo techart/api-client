@@ -8,6 +8,7 @@ class Cache
     protected static $lifeTime = 60;
     protected static $attemptTime = 30;
     protected static $lifeTimes = array();
+    protected static $enable = true;
     
     public static function setPath($path)
     {
@@ -35,6 +36,11 @@ class Cache
     public static function setAttemptTime($time)
     {
         self::$attemptTime = $time;
+    }
+    
+    public static function disable()
+    {
+        self::$enable = false;
     }
     
     public static function getPath($subPath)
@@ -70,7 +76,7 @@ class Cache
     {
         $value = null;
         $path = self::getPath($name);
-        if (is_file($path)) {
+        if (self::$enable && is_file($path)) {
             $content = file_get_contents($path);
             if (preg_match('{^(\d+):(.+)$}', $content, $m)) {
                 $time = (int)$m[1];

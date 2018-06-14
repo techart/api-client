@@ -6,6 +6,7 @@ class API
 {
     protected static $url = 'https://api.techart.ru';
     protected static $key = false;
+    protected static $debug = false;
     
     public static function setUrl($value)
     {
@@ -17,9 +18,22 @@ class API
         self::$key = $value;
     }
     
+    public static function setDebug($callback)
+    {
+        self::$debug = $callback;
+    }
+    
+    public static function debug($value)
+    {
+        if (self::$debug) {
+            call_user_func(self::$debug, $value);
+        }
+    }
+    
     public static function get($uri)
     {
         $url = rtrim(self::$url, '/') .'/'. ltrim($uri, '/');
+        self::debug("Request {$url}");
         $contentType = 'text/html';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,$url);
@@ -47,12 +61,29 @@ class API
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE); 
         
         if ($code==404) {
+            self::debug("Response 404");
             return null;
         }
         
         if ($contentType=='application/json') {
              $result = json_decode($result);
         }
+        
+        $type = 'Unknown Type';
+        if (is_string($result)) {
+            $type = 'string('.strlen($result).')';
+        }
+        if (is_array($result)) {
+            $type = 'array('.count($result).')';
+        }
+        if (is_object($result)) {
+            $type = 'object('.get_class($result).')';
+        }
+        if (is_int($result)) {
+            $type = 'int('.$result.')';
+        }
+        
+        self::debug("Response {$code}: {$contentType} {$type}");
         
         return $result;
     }
