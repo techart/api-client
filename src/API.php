@@ -23,10 +23,10 @@ class API
         self::$debug = $callback;
     }
     
-    public static function debug($value)
+    public static function debug()
     {
         if (self::$debug) {
-            call_user_func(self::$debug, $value);
+            call_user_func_array(self::$debug, func_get_args());
         }
     }
     
@@ -84,6 +84,9 @@ class API
         }
         
         self::debug("Response {$code}: {$contentType} {$type}");
+        if ($code == 500) {
+            self::debug($result, 'Ответ 500');
+        }
         
         return $result;
     }
