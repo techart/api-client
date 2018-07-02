@@ -25,7 +25,7 @@ class Cache
         self::$lifeTimes[$name] = $time;
     }
     
-    public function getLifeTimeFor($name)
+    public static function getLifeTimeFor($name)
     {
         if (isset(self::$lifeTimes[$name])) {
             return self::$lifeTimes[$name];
