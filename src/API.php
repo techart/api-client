@@ -32,7 +32,11 @@ class API
     
     public static function get($uri)
     {
-        $url = rtrim(self::$url, '/') .'/'. ltrim($uri, '/');
+        if (!preg_match('{^http}', $uri)) {
+            $url = rtrim(self::$url, '/') .'/'. ltrim($uri, '/');
+        } else {
+            $url = $uri;
+        }
         self::debug("Request {$url}");
         $contentType = 'text/html';
         $curl = curl_init();
@@ -49,7 +53,9 @@ class API
         if (!empty($sendHeaders)) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, $sendHeaders); 
         }
-        curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $h) use(&$contentType) {
+        $responseHeaders = array();
+        curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $h) use(&$contentType, &$responseHeaders) {
+            $responseHeaders[] = $h;
             $len = strlen($h);
             if (preg_match('{^Content-Type:\s*([^/]+)/([0-9a-z_-]+)}i', $h, $m)) {
                 $contentType = $m[1].'/'.$m[2];
@@ -86,6 +92,10 @@ class API
         self::debug("Response {$code}: {$contentType} {$type}");
         if ($code == 500) {
             self::debug($result, 'Ответ 500');
+        }
+        
+        if ($code != 200) {
+        	return;
         }
         
         return $result;
