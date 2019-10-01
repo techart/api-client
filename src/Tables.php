@@ -4,15 +4,22 @@ namespace Techart\API;
 
 class Tables
 {
+	protected static $serviceHost = 'dna.techart.ru';
 	protected $project = false;
 	protected $table = false;
 	protected $error = false;
 	protected $offset = false;
+	protected $order = false;
 	protected $limit = false;
 	protected $filter = false;
 	protected $columns = false;
 	protected $exclude = false;
-	
+
+	public static function setServiceHost($value)
+	{
+		self::$serviceHost = $value;
+	}
+
 	public static function from($code)
 	{
 		$builder = new self();
@@ -24,7 +31,7 @@ class Tables
 		}
 		return $builder;
 	}
-	
+
 	public function count()
 	{
 		$url = $this->url('count');
@@ -34,7 +41,7 @@ class Tables
 		}
 		return (int)$obj->count;
 	}
-	
+
 	public function select()
 	{
 		$url = $this->url('select');
@@ -44,7 +51,7 @@ class Tables
 		}
 		return $obj->rows;
 	}
-	
+
 	public function find($id)
 	{
 		$url = $this->url('item', $id);
@@ -54,20 +61,21 @@ class Tables
 		}
 		return $obj->item;
 	}
-	
+
 	protected function url($action, $id = false)
 	{
 		if (!$this->project || !$this->table) {
 			return false;
 		}
-		
-		$url = "http://{$this->project}.tables.techart.ru/api/{$action}/{$this->table}";
+
+		$host = self::$serviceHost;
+		$url = "http://{$this->project}.{$host}/api/{$action}/{$this->table}";
 		if ($id) {
 			$url .= "/{$id}";
 		}
 		$url .= '.json';
 		$params = array();
-		foreach(array('limit', 'offset', 'order', 'filter', 'columns', 'exclude') as $param) {
+		foreach(array('limit', 'offset', 'order', 'filter', 'columns', 'exclude', 'updated') as $param) {
 			if ($this->$param) {
 				$params[$param] = $this->$param;
 			}
@@ -75,10 +83,10 @@ class Tables
 		if ($params) {
 			$url .= '?' . http_build_query($params);
 		}
-		
+
 		return $url;
 	}
-	
+
 	public function __call($method, $args)
 	{
 		if (preg_match('{^set(.+)$}', $method, $m)) {
@@ -90,7 +98,7 @@ class Tables
 			$property = strtolower($m[1]);
 			return $this->$property;
 		}
-		if (in_array($method, array('offset', 'limit', 'order', 'filter', 'columns', 'exclude'))) {
+		if (in_array($method, array('offset', 'limit', 'order', 'filter', 'columns', 'exclude', 'updated'))) {
 			$this->$method = $args[0];
 			return $this;
 		}

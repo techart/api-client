@@ -78,7 +78,7 @@ class Cache
         $path = self::getPath($name);
         if (self::$enable && is_file($path)) {
             $content = file_get_contents($path);
-            if (preg_match('{^(\d+):(.+)$}', $content, $m)) {
+            if (preg_match('{^(\d+):(.+)$}sm', $content, $m)) {
                 $time = (int)$m[1];
                 $value = unserialize($m[2]);
                 if ($time>time()) {
