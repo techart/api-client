@@ -76,7 +76,7 @@ class Tables
 		$url .= '.json';
 		$params = array();
 		foreach(array('limit', 'offset', 'order', 'filter', 'columns', 'exclude', 'updated') as $param) {
-			if ($this->$param) {
+			if ($this->$param ?? false) {
 				$params[$param] = $this->$param;
 			}
 		}
