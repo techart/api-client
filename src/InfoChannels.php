@@ -13,7 +13,7 @@ class InfoChannels
 		}
 		return $count;
 	}
-	
+
 	public static function selectRows($query)
 	{
 		$rows = array();
@@ -44,15 +44,15 @@ class InfoChannels
 		});
 		return array_slice($rows, $query['offset'], $query['limit']);
 	}
-	
+
 	public static function loadRow($address)
 	{
 	}
-	
+
 	public static function renderRow($address)
 	{
 	}
-	
+
 	public static function countSource($source, $filter)
 	{
 		if (preg_match('{^([a-z]+):(.+)$}i', $source, $m)) {
@@ -64,7 +64,7 @@ class InfoChannels
 		}
 		return 0;
 	}
-	
+
 	public static function selectSource($source, $filter, $limit = 100)
 	{
 		if (preg_match('{^([a-z]+):(.+)$}i', $source, $m)) {
@@ -76,7 +76,7 @@ class InfoChannels
 		}
 		return array();
 	}
-	
+
 	public static function parseQuery($query)
 	{
 		$limit = 0;
