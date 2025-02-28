@@ -23,4 +23,11 @@ class MasterInfo
 			return $data->content;
 		}
 	}
+
+	public static function getPuls()
+	{
+		return Cache::get('puls.json', function() {
+			return API::getStruct('/puls/');
+		});
+	}
 }
