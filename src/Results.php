@@ -11,6 +11,13 @@ class Results
 		});
 	}
 
+	public static function getCase($id)
+	{
+		return Cache::get("case-{$id}.json", function() use($id) {
+			return API::getStruct("portfolio/case/{$id}/");
+		});
+	}
+
 	public static function getPortfolio($recipient, $date)
 	{
 		if ($date) {
