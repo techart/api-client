@@ -30,7 +30,7 @@ class API
 		}
 	}
 
-	public static function get($uri)
+	public static function get($uri, $associative = null)
 	{
 		if (!preg_match('{^http}', $uri)) {
 			$url = rtrim(self::$url, '/') .'/'. ltrim($uri, '/');
@@ -72,7 +72,7 @@ class API
 		}
 
 		if ($contentType=='application/json') {
-			$result = json_decode($result);
+			$result = json_decode($result, $associative);
 		}
 
 		$type = 'Unknown Type';
